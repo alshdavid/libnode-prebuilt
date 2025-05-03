@@ -1,0 +1,32 @@
+diff --git a/node.gyp b/node.gyp
+index ec1f90b7..91c0f8aa 100644
+--- a/node.gyp
++++ b/node.gyp
+@@ -61,6 +61,7 @@
+       '<@(node_builtin_shareable_builtins)',
+     ],
+     'node_sources': [
++      'src/node_c_embed.cc',
+       'src/api/async_resource.cc',
+       'src/api/callback.cc',
+       'src/api/embed_helpers.cc',
+diff --git a/src/node_c_embed.cc b/src/node_c_embed.cc
+new file mode 100644
+index 00000000..6f9287a0
+--- /dev/null
++++ b/src/node_c_embed.cc
+@@ -0,0 +1,5 @@
++#include "node.h"
++
++extern "C" int node_start(int argc, char** argv) {
++  return node::Start(argc, argv);
++}
+diff --git a/src/node_c_embed.h b/src/node_c_embed.h
+new file mode 100644
+index 00000000..661b2b97
+--- /dev/null
++++ b/src/node_c_embed.h
+@@ -0,0 +1,3 @@
++#include "node.h"
++
++int node_start(int argc, char** argv);
