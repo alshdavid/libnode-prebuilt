@@ -1,0 +1,209 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: |
+          The branch of Nodejs to build
+          e.g. "v22.15.0"
+        type: string
+
+      nodejs_git:
+        description: 'The https url to the git repo/fork of nodejs'
+        required: false
+        default: https://github.com/nodejs/node
+        type: string
+
+      linux_container:
+        description: 'The container to use for running the Linux build'
+        required: false
+        default: ubuntu:24.04
+        type: string
+
+      apply_patches:
+        description: 'Apply patches'
+        required: false
+        default: true
+        type: boolean
+
+env:
+  NODEJS_GIT: ${{ inputs.nodejs_git }}
+  NODEJS_BRANCH: ${{ inputs.branch }}
+  # NODEJS_GIT: https://github.com/vmoroz/node
+  # NODEJS_BRANCH: pr/node-api-libnode
+
+jobs:
+  info:
+    name: Build Info
+    runs-on: ubuntu-24.04
+    steps:
+      - run: |
+          echo Nodejs URL:      ${{ inputs.branch }}
+          echo Nodejs Branch:   ${{ inputs.nodejs_git }}
+          echo
+          echo Linux Container: ${{ inputs.linux_container }}
+          echo Apply Patches:   ${{ inputs.apply_patches }}
+
+  build_linux_amd64:
+    name: 🐥 Linux AMD64
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
+    container:
+      image: ${{ inputs.linux_container }}
+      env:
+        NODEJS_GIT: ${{ env.NODEJS_GIT }}
+        NODEJS_BRANCH: ${{ env.NODEJS_BRANCH }}
+        DEBIAN_FRONTEND: noninteractive
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash ./build-linux-amd64.bash prepare
+      - run: bash ./build-linux-amd64.bash clone
+      - if: ${{ inputs.apply_patches }}
+        run: bash ./patches/apply.bash
+      - run: bash ./build-linux-amd64.bash build
+      - run: bash ./build-linux-amd64.bash copy
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libnode-linux-amd64
+          path: ${{ github.workspace }}/release/**/*
+          if-no-files-found: error
+          retention-days: 1
+
+  build_linux_arm64:
+    name: 🐥 Linux ARM64
+    runs-on: ubuntu-24.04-arm
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
+    container:
+      image: ${{ inputs.linux_container }}
+      env:
+        NODEJS_GIT: ${{ env.NODEJS_GIT }}
+        NODEJS_BRANCH: ${{ env.NODEJS_BRANCH }}
+        DEBIAN_FRONTEND: noninteractive
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash ./build-linux-arm64.bash prepare
+      - run: bash ./build-linux-arm64.bash clone
+      - if: ${{ inputs.apply_patches }}
+        run: bash ./patches/apply.bash
+      - run: bash ./build-linux-arm64.bash build
+      - run: bash ./build-linux-arm64.bash copy
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libnode-linux-arm64
+          path: ${{ github.workspace }}/release/**/*
+          if-no-files-found: error
+          retention-days: 1
+
+  build_macos_amd64:
+    name: 🍎 MacOS AMD64
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash ./build-macos-amd64.bash prepare
+      - run: bash ./build-macos-amd64.bash clone
+      - if: ${{ inputs.apply_patches }}
+        run: bash ./patches/apply.bash
+      - run: bash ./build-macos-amd64.bash build
+      - run: bash ./build-macos-amd64.bash copy
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libnode-macos-amd64
+          path: ${{ github.workspace }}/release/**/*
+          if-no-files-found: error
+          retention-days: 1
+
+  build_macos_arm64:
+    name: 🍎 MacOS ARM64
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash ./build-macos-arm64.bash prepare
+      - run: bash ./build-macos-arm64.bash clone
+      - if: ${{ inputs.apply_patches }}
+        run: bash ./patches/apply.bash
+      - run: bash ./build-macos-arm64.bash build
+      - run: bash ./build-macos-arm64.bash copy
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libnode-macos-arm64
+          path: ${{ github.workspace }}/release/**/*
+          if-no-files-found: error
+          retention-days: 1
+
+  build_windows_amd64:
+    name: 🟦 Windows amd64
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: . .\build-windows-amd64.ps1 prepare
+      - run: . .\build-windows-amd64.ps1 clone
+      - if: ${{ inputs.apply_patches }}
+        run: . .\patches\apply.ps1
+      - run: . .\build-windows-amd64.ps1 build
+      - run: . .\build-windows-amd64.ps1 copy-release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libnode-windows-amd64
+          path: ${{ github.workspace }}/release/**/*
+          if-no-files-found: error
+          retention-days: 1
+
+  build_windows_arm64:
+    name: 🟦 Windows arm64
+    runs-on: windows-latest
+    steps:
+      - run: echo TODO
+
+  publish-github-release:
+    name: "🔁 Github Release"
+    runs-on: ubuntu-latest
+    needs: 
+      - build_linux_amd64
+      - build_linux_arm64
+      - build_macos_amd64
+      - build_macos_arm64
+      - build_windows_amd64
+      - build_windows_arm64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: libnode-*
+          path: release
+          merge-multiple: true
+      - name: Publish` Github Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+
+          tag=$(echo "${{ inputs.branch }}" | iconv -c -t ascii//TRANSLIT | sed -E 's/[~^]+//g' | sed -E 's/^-+|-+$//g' | tr '/' '-' | tr A-Z a-z)
+          echo "Tag: ${tag}"
+          
+          gh release create $tag  --draft --notes "Automatically built binaries\nLinux binaries built on ${{inputs.linux_container}}\nHas Patches: ${{ inputs.apply_patches }}"
+          gh release edit $tag --title "${{ inputs.branch }}"
+
+          cd release
+
+          for name in *; do
+            cd "${{ github.workspace }}/release/${name}"
+
+            tar -czvf "./${name}.tar.gz" ./*
+            gh release upload $tag "${name}.tar.gz"
+            rm -rf *.tar.gz
+
+            tar -cJvf "./${name}.tar.xz" ./*
+            gh release upload $tag "${name}.tar.xz"
+            rm -rf *.tar.xz
+
+            zip "${name}" ./*
+            gh release upload $tag "${name}.zip"
+            rm -rf *.zip
+          done
+         
+          gh release edit $tag --draft=false
