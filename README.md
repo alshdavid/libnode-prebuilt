@@ -1,4 +1,4 @@
-# Prebuild `libnode` binaries
+# Prebuilt `libnode` binaries
 
 ## Installation
 
