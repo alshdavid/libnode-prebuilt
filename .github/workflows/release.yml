@@ -101,7 +101,7 @@ jobs:
 
   build_macos_amd64:
     name: 🍎 MacOS AMD64
-    runs-on: macos-15
+    runs-on: macos-13
     steps:
       - uses: actions/checkout@v4
       - run: bash ./build-macos-amd64.bash prepare

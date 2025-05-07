@@ -5,6 +5,10 @@ os="macos"
 arch="amd64"
 
 function prepare() {
+  xcodebuild -version
+  sudo xcode-select --switch /Library/Developer/CommandLineTools/
+  xcodebuild -version
+
   sudo chown -R $(whoami) $(brew --prefix)/*
 
   # homebrew fails to update python 3.9.1 to 3.9.1.1 due to unlinking failure
@@ -37,7 +41,8 @@ function build() {
   ./configure \
     --shared \
     --dest-cpu x64 \
-    --dest-os mac 
+    --dest-os mac \
+    --no-cross-compiling
 
   make -j8
   cd ../

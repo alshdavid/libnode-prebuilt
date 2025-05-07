@@ -8,9 +8,9 @@ function clone() {
 }
 
 function build() {
-  cd .\node
+  Set-Location .\node
   .\vcbuild.bat x64 dll openssl-no-asm
-  cd ..
+  Set-Location ..
 }
 
 function copy-release() {
