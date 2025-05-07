@@ -27,6 +27,36 @@ on:
         default: true
         type: boolean
 
+      build_linux_amd64:
+        description: 'Build Linux AMD64'
+        default: true
+        type: boolean
+
+      build_linux_arm64:
+        description: 'Build MacOS ARM64'
+        default: true
+        type: boolean
+
+      build_macos_amd64:
+        description: 'Build MacOS AMD64'
+        default: true
+        type: boolean
+
+      build_macos_arm64:
+        description: 'Build MacOS ARM64'
+        default: true
+        type: boolean
+
+      build_windows_amd64:
+        description: 'Build Windows AMD64'
+        default: true
+        type: boolean
+
+      build_windows_arm64:
+        description: 'Build Windows ARM64'
+        default: false
+        type: boolean
+
 env:
   NODEJS_GIT: ${{ inputs.nodejs_git }}
   NODEJS_BRANCH: ${{ inputs.branch }}
@@ -46,6 +76,7 @@ jobs:
           echo Apply Patches:   ${{ inputs.apply_patches }}
 
   build_linux_amd64:
+    if: ${{ inputs.build_linux_amd64 }}
     name: 🐥 Linux AMD64
     runs-on: ubuntu-24.04
     defaults:
@@ -73,6 +104,7 @@ jobs:
           retention-days: 1
 
   build_linux_arm64:
+    if: ${{ inputs.build_linux_arm64 }}
     name: 🐥 Linux ARM64
     runs-on: ubuntu-24.04-arm
     defaults:
@@ -99,25 +131,27 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  # build_macos_amd64:
-  #   name: 🍎 MacOS AMD64
-  #   runs-on: macos-13
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - run: bash ./build-macos-amd64.bash prepare
-  #     - run: bash ./build-macos-amd64.bash clone
-  #     - if: ${{ inputs.apply_patches }}
-  #       run: bash ./patches/apply.bash
-  #     - run: bash ./build-macos-amd64.bash build
-  #     - run: bash ./build-macos-amd64.bash copy
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: libnode-macos-amd64
-  #         path: ${{ github.workspace }}/release/**/*
-  #         if-no-files-found: error
-  #         retention-days: 1
+  build_macos_amd64:
+    if: ${{ inputs.build_macos_amd64 }}
+    name: 🍎 MacOS AMD64
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash ./build-macos-amd64.bash prepare
+      - run: bash ./build-macos-amd64.bash clone
+      - if: ${{ inputs.apply_patches }}
+        run: bash ./patches/apply.bash
+      - run: bash ./build-macos-amd64.bash build
+      - run: bash ./build-macos-amd64.bash copy
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libnode-macos-amd64
+          path: ${{ github.workspace }}/release/**/*
+          if-no-files-found: error
+          retention-days: 1
 
   build_macos_arm64:
+    if: ${{ inputs.build_macos_arm64 }}
     name: 🍎 MacOS ARM64
     runs-on: macos-15
     steps:
@@ -135,25 +169,27 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  # build_windows_amd64:
-  #   name: 🟦 Windows amd64
-  #   runs-on: windows-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - run: . .\build-windows-amd64.ps1 prepare
-  #     - run: . .\build-windows-amd64.ps1 clone
-  #     - if: ${{ inputs.apply_patches }}
-  #       run: . .\patches\apply.ps1
-  #     - run: . .\build-windows-amd64.ps1 build
-  #     - run: . .\build-windows-amd64.ps1 copy-release
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: libnode-windows-amd64
-  #         path: ${{ github.workspace }}/release/**/*
-  #         if-no-files-found: error
-  #         retention-days: 1
+  build_windows_amd64:
+    if: ${{ inputs.build_windows_amd64 }}
+    name: 🟦 Windows amd64
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: . .\build-windows-amd64.ps1 prepare
+      - run: . .\build-windows-amd64.ps1 clone
+      - if: ${{ inputs.apply_patches }}
+        run: . .\patches\apply.ps1
+      - run: . .\build-windows-amd64.ps1 build
+      - run: . .\build-windows-amd64.ps1 copy-release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libnode-windows-amd64
+          path: ${{ github.workspace }}/release/**/*
+          if-no-files-found: error
+          retention-days: 1
 
   build_windows_arm64:
+    if: ${{ inputs.build_windows_arm64 }}
     name: 🟦 Windows arm64
     runs-on: windows-latest
     steps:
@@ -165,9 +201,9 @@ jobs:
     needs: 
       - build_linux_amd64
       - build_linux_arm64
-      # - build_macos_amd64
+      - build_macos_amd64
       - build_macos_arm64
-      # - build_windows_amd64
+      - build_windows_amd64
       - build_windows_arm64
     steps:
       - uses: actions/checkout@v4
