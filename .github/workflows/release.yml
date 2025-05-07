@@ -15,18 +15,18 @@ on:
         default: https://github.com/nodejs/node
         type: string
 
-      linux_container:
-        description: 'The container to use for running the Linux build'
-        required: false
-        default: ubuntu:24.04
-        type: string
-
       apply_patches:
         description: 'Apply patches'
         required: false
         default: true
         type: boolean
-
+        
+      linux_container:
+        description: 'The container to use for running the Linux build'
+        required: false
+        default: ubuntu:24.04
+        type: string
+        
       build_linux_amd64:
         description: 'Build Linux AMD64'
         default: true
@@ -36,6 +36,7 @@ on:
         description: 'Build MacOS ARM64'
         default: true
         type: boolean
+
 
       build_macos_amd64:
         description: 'Build MacOS AMD64'
