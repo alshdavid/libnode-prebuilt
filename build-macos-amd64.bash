@@ -37,8 +37,7 @@ function build() {
   ./configure \
     --shared \
     --dest-cpu x64 \
-    --dest-os mac \
-    --no-cross-compiling
+    --dest-os mac 
 
   make -j8
   cd ../

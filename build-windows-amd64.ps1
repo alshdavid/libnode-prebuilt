@@ -1,4 +1,6 @@
 function prepare() {
+  Get-Command clang
+  clang --versions
 }
 
 function clone() {
