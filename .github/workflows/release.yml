@@ -3,18 +3,18 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: |
-          The branch of Nodejs to build
-          e.g. "v22.15.0"
-        type: string
-
       nodejs_git:
         description: 'The https url to the git repo/fork of nodejs'
         required: false
         default: https://github.com/nodejs/node
         type: string
 
+      branch:
+        description: |
+          The branch of Nodejs to build
+          e.g. "v22.15.0"
+        type: string
+        
       apply_patches:
         description: 'Apply patches'
         required: false
@@ -26,7 +26,7 @@ on:
         required: false
         default: ubuntu:24.04
         type: string
-        
+
       build_linux_amd64:
         description: 'Build Linux AMD64'
         default: true
