@@ -99,23 +99,23 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  build_macos_amd64:
-    name: 🍎 MacOS AMD64
-    runs-on: macos-13
-    steps:
-      - uses: actions/checkout@v4
-      - run: bash ./build-macos-amd64.bash prepare
-      - run: bash ./build-macos-amd64.bash clone
-      - if: ${{ inputs.apply_patches }}
-        run: bash ./patches/apply.bash
-      - run: bash ./build-macos-amd64.bash build
-      - run: bash ./build-macos-amd64.bash copy
-      - uses: actions/upload-artifact@v4
-        with:
-          name: libnode-macos-amd64
-          path: ${{ github.workspace }}/release/**/*
-          if-no-files-found: error
-          retention-days: 1
+  # build_macos_amd64:
+  #   name: 🍎 MacOS AMD64
+  #   runs-on: macos-13
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - run: bash ./build-macos-amd64.bash prepare
+  #     - run: bash ./build-macos-amd64.bash clone
+  #     - if: ${{ inputs.apply_patches }}
+  #       run: bash ./patches/apply.bash
+  #     - run: bash ./build-macos-amd64.bash build
+  #     - run: bash ./build-macos-amd64.bash copy
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: libnode-macos-amd64
+  #         path: ${{ github.workspace }}/release/**/*
+  #         if-no-files-found: error
+  #         retention-days: 1
 
   build_macos_arm64:
     name: 🍎 MacOS ARM64
@@ -135,23 +135,23 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  build_windows_amd64:
-    name: 🟦 Windows amd64
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: . .\build-windows-amd64.ps1 prepare
-      - run: . .\build-windows-amd64.ps1 clone
-      - if: ${{ inputs.apply_patches }}
-        run: . .\patches\apply.ps1
-      - run: . .\build-windows-amd64.ps1 build
-      - run: . .\build-windows-amd64.ps1 copy-release
-      - uses: actions/upload-artifact@v4
-        with:
-          name: libnode-windows-amd64
-          path: ${{ github.workspace }}/release/**/*
-          if-no-files-found: error
-          retention-days: 1
+  # build_windows_amd64:
+  #   name: 🟦 Windows amd64
+  #   runs-on: windows-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - run: . .\build-windows-amd64.ps1 prepare
+  #     - run: . .\build-windows-amd64.ps1 clone
+  #     - if: ${{ inputs.apply_patches }}
+  #       run: . .\patches\apply.ps1
+  #     - run: . .\build-windows-amd64.ps1 build
+  #     - run: . .\build-windows-amd64.ps1 copy-release
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: libnode-windows-amd64
+  #         path: ${{ github.workspace }}/release/**/*
+  #         if-no-files-found: error
+  #         retention-days: 1
 
   build_windows_arm64:
     name: 🟦 Windows arm64
@@ -165,9 +165,9 @@ jobs:
     needs: 
       - build_linux_amd64
       - build_linux_arm64
-      - build_macos_amd64
+      # - build_macos_amd64
       - build_macos_arm64
-      - build_windows_amd64
+      # - build_windows_amd64
       - build_windows_arm64
     steps:
       - uses: actions/checkout@v4
