@@ -14,6 +14,11 @@ on:
           The branch of Nodejs to build
           e.g. "v22.15.0"
         type: string
+
+      create_release:
+        description: 'Create Github Release'
+        default: true
+        type: boolean
         
       apply_patches:
         description: 'Apply patches'
@@ -197,6 +202,7 @@ jobs:
       - run: echo TODO
 
   publish-github-release:
+    if: ${{ inputs.create_release }}
     name: "🔁 Github Release"
     runs-on: ubuntu-latest
     needs: 
