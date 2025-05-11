@@ -34,6 +34,9 @@ function clone() {
 
 function build() {
   cd ./node  
+  export CC="gcc"
+  export CXX="g++"
+
   ./configure \
     --shared \
     --dest-cpu x64 \
