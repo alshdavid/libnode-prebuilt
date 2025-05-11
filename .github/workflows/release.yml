@@ -15,10 +15,12 @@ on:
           e.g. "v22.15.0"
         type: string
 
-      create_release:
-        description: 'Create Github Release'
-        default: true
-        type: boolean
+      # Max 10 options for Github inputs
+      # https://github.com/orgs/community/discussions/8774
+      # create_release:
+      #   description: 'Create Github Release'
+      #   default: true
+      #   type: boolean
         
       apply_patches:
         description: 'Apply patches'
@@ -202,7 +204,7 @@ jobs:
       - run: echo TODO
 
   publish-github-release:
-    if: ${{ inputs.create_release }}
+    # if: ${{ inputs.create_release }}
     name: "🔁 Github Release"
     runs-on: ubuntu-latest
     needs: 
