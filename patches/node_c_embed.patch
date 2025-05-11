@@ -1,8 +1,8 @@
 diff --git a/node.gyp b/node.gyp
-index ec1f90b7..0d672e32 100644
+index 59303d9a..c5704914 100644
 --- a/node.gyp
 +++ b/node.gyp
-@@ -61,6 +61,7 @@
+@@ -62,6 +62,7 @@
        '<@(node_builtin_shareable_builtins)',
      ],
      'node_sources': [
@@ -12,10 +12,10 @@ index ec1f90b7..0d672e32 100644
        'src/api/embed_helpers.cc',
 diff --git a/src/node_embedding_api.cc b/src/node_embedding_api.cc
 new file mode 100644
-index 00000000..3d6f0bc6
+index 00000000..07b8018b
 --- /dev/null
 +++ b/src/node_embedding_api.cc
-@@ -0,0 +1,20 @@
+@@ -0,0 +1,28 @@
 +//
 +// Description: C-based API for embedding Node.js.
 +//
@@ -33,15 +33,23 @@ index 00000000..3d6f0bc6
 +
 +#include "node.h"
 +
-+extern "C" int node_embedding_start(int argc, char** argv) {
-+  return node::Start(argc, argv);
++extern "C" {
++  #ifdef _WIN32
++  __declspec(dllexport) int node_embedding_start(int argc, char** argv) {
++    return node::Start(argc, argv);
++  }
++  #else
++  int node_embedding_start(int argc, char** argv) {
++    return node::Start(argc, argv);
++  }
++  #endif
 +}
 diff --git a/src/node_embedding_api.h b/src/node_embedding_api.h
 new file mode 100644
-index 00000000..17e080bc
+index 00000000..891af2a7
 --- /dev/null
 +++ b/src/node_embedding_api.h
-@@ -0,0 +1,18 @@
+@@ -0,0 +1,22 @@
 +//
 +// Description: C-based API for embedding Node.js.
 +//
@@ -59,4 +67,8 @@ index 00000000..17e080bc
 +
 +#include "node.h"
 +
++#ifdef _WIN32
++int __cdecl node_embedding_start(int argc, char** argv);
++#else
 +int node_embedding_start(int argc, char** argv);
++#endif
