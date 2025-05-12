@@ -1,4 +1,5 @@
 name: Release
+run-name: Release ${{ inputs.branch }}
 
 on:
   workflow_dispatch:
