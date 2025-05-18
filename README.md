@@ -12,4 +12,4 @@ curl -L --url https://github.com/alshdavid/libnode-prebuilt/releases/download/v2
 
 ## Patches for C FFI
 
-This includes a small patch to add a `node_embedding_start` C function for embedders coming from languages that cannot use C++ bindings (Like Rust, C#, etc).
+This includes a small patch to add a `node_embedding_main` C function for embedders coming from languages that cannot use C++ bindings (Like Rust, C#, etc).
