@@ -101,7 +101,7 @@ jobs:
       - run: bash ./build-linux-amd64.bash prepare
       - run: bash ./build-linux-amd64.bash clone
       - if: ${{ inputs.apply_patches }}
-        run: bash ./patches/apply.bash "${{ input.branch }}"
+        run: bash ./patches/apply.bash "${{ inputs.branch }}"
       - run: bash ./build-linux-amd64.bash build
       - run: bash ./build-linux-amd64.bash copy
       - uses: actions/upload-artifact@v4
@@ -129,7 +129,7 @@ jobs:
       - run: bash ./build-linux-arm64.bash prepare
       - run: bash ./build-linux-arm64.bash clone
       - if: ${{ inputs.apply_patches }}
-        run: bash ./patches/apply.bash "${{ input.branch }}"
+        run: bash ./patches/apply.bash "${{ inputs.branch }}"
       - run: bash ./build-linux-arm64.bash build
       - run: bash ./build-linux-arm64.bash copy
       - uses: actions/upload-artifact@v4
@@ -148,7 +148,7 @@ jobs:
       - run: bash ./build-macos-amd64.bash prepare
       - run: bash ./build-macos-amd64.bash clone
       - if: ${{ inputs.apply_patches }}
-        run: bash ./patches/apply.bash "${{ input.branch }}"
+        run: bash ./patches/apply.bash "${{ inputs.branch }}"
       - run: bash ./build-macos-amd64.bash build
       - run: bash ./build-macos-amd64.bash copy
       - uses: actions/upload-artifact@v4
@@ -167,7 +167,7 @@ jobs:
       - run: bash ./build-macos-arm64.bash prepare
       - run: bash ./build-macos-arm64.bash clone
       - if: ${{ inputs.apply_patches }}
-        run: bash ./patches/apply.bash "${{ input.branch }}"
+        run: bash ./patches/apply.bash "${{ inputs.branch }}"
       - run: bash ./build-macos-arm64.bash build
       - run: bash ./build-macos-arm64.bash copy
       - uses: actions/upload-artifact@v4
@@ -186,7 +186,7 @@ jobs:
       - run: . .\build-windows-amd64.ps1 prepare
       - run: . .\build-windows-amd64.ps1 clone
       - if: ${{ inputs.apply_patches }}
-        run: . .\patches\apply.ps1 "${{ input.branch }}"
+        run: . .\patches\apply.ps1 "${{ inputs.branch }}"
       - run: . .\build-windows-amd64.ps1 build
       - run: . .\build-windows-amd64.ps1 copy-release
       - uses: actions/upload-artifact@v4
