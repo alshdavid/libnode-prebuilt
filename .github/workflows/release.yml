@@ -47,7 +47,7 @@ on:
 
       build_macos_amd64:
         description: 'Build MacOS AMD64'
-        default: true
+        default: false
         type: boolean
 
       build_macos_arm64:

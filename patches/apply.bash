@@ -9,10 +9,12 @@ for name in "$SCRIPT_DIR/all/*.patch"; do
     git apply $name
 done
 
-for name in "$SCRIPT_DIR/$1/*.patch"; do  
-    if [ ! -f $name ]; then
-        break
-    fi
-    echo Applying $name
-    git apply $name
-done
+if [ ! -f $SCRIPT_DIR/$1 ]; then
+    for name in "$SCRIPT_DIR/$1/*.patch"; do  
+        if [ ! -f $name ]; then
+            break
+        fi
+        echo Applying $name
+        git apply $name
+    done
+fi

@@ -12,10 +12,12 @@ Get-ChildItem -Path "$PSScriptRoot\all" -Filter *.patch | ForEach-Object {
 
 # Apply patches from the directory passed as argument ($args[0])
 $targetDir = Join-Path $PSScriptRoot $args[0]
-Get-ChildItem -Path $targetDir -Filter *.patch | ForEach-Object {
-    if (-Not (Test-Path $_.FullName)) {
-        return
+if (Test-Path "$targetDir") {
+    Get-ChildItem -Path $targetDir -Filter *.patch | ForEach-Object {
+        if (-Not (Test-Path $_.FullName)) {
+            return
+        }
+        Write-Host "Applying $($_.FullName)"
+        git apply $_.FullName
     }
-    Write-Host "Applying $($_.FullName)"
-    git apply $_.FullName
 }
