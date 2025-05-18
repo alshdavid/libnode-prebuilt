@@ -1,0 +1,16 @@
+diff --git a/src/node_builtins.cc b/src/node_builtins.cc
+index 104c4ef0..ed7cdc0b 100644
+--- a/src/node_builtins.cc
++++ b/src/node_builtins.cc
+@@ -7,6 +7,11 @@
+ #include "simdutf.h"
+ #include "util-inl.h"
+ 
++#if defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
++template class node::ThreadsafeCopyOnWrite<
++    std::map<std::string, node::UnionBytes>>;
++#endif
++
+ namespace node {
+ namespace builtins {
+ 
