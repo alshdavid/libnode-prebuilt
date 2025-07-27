@@ -98,12 +98,12 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
     steps:
       - uses: actions/checkout@v4
-      - run: bash ./build-linux-amd64.bash prepare
-      - run: bash ./build-linux-amd64.bash clone
+      - run: bash ./scripts/build-linux-amd64.bash prepare
+      - run: bash ./scripts/build-linux-amd64.bash clone
       - if: ${{ inputs.apply_patches }}
-        run: bash ./patches/apply.bash "${{ inputs.branch }}"
-      - run: bash ./build-linux-amd64.bash build
-      - run: bash ./build-linux-amd64.bash copy
+        run: bash ./scripts/patches-apply.bash "${{ inputs.branch }}"
+      - run: bash ./scripts/build-linux-amd64.bash build
+      - run: bash ./scripts/build-linux-amd64.bash copy
       - uses: actions/upload-artifact@v4
         with:
           name: libnode-linux-amd64
@@ -126,12 +126,12 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
     steps:
       - uses: actions/checkout@v4
-      - run: bash ./build-linux-arm64.bash prepare
-      - run: bash ./build-linux-arm64.bash clone
+      - run: bash ./scripts/build-linux-arm64.bash prepare
+      - run: bash ./scripts/build-linux-arm64.bash clone
       - if: ${{ inputs.apply_patches }}
-        run: bash ./patches/apply.bash "${{ inputs.branch }}"
-      - run: bash ./build-linux-arm64.bash build
-      - run: bash ./build-linux-arm64.bash copy
+        run: bash ./scripts/patches-apply.bash "${{ inputs.branch }}"
+      - run: bash ./scripts/build-linux-arm64.bash build
+      - run: bash ./scripts/build-linux-arm64.bash copy
       - uses: actions/upload-artifact@v4
         with:
           name: libnode-linux-arm64
@@ -145,12 +145,12 @@ jobs:
     runs-on: macos-13
     steps:
       - uses: actions/checkout@v4
-      - run: bash ./build-macos-amd64.bash prepare
-      - run: bash ./build-macos-amd64.bash clone
+      - run: bash ./scripts/build-macos-amd64.bash prepare
+      - run: bash ./scripts/build-macos-amd64.bash clone
       - if: ${{ inputs.apply_patches }}
-        run: bash ./patches/apply.bash "${{ inputs.branch }}"
-      - run: bash ./build-macos-amd64.bash build
-      - run: bash ./build-macos-amd64.bash copy
+        run: bash ./scripts/patches-apply.bash "${{ inputs.branch }}"
+      - run: bash ./scripts/build-macos-amd64.bash build
+      - run: bash ./scripts/build-macos-amd64.bash copy
       - uses: actions/upload-artifact@v4
         with:
           name: libnode-macos-amd64
@@ -164,12 +164,12 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-      - run: bash ./build-macos-arm64.bash prepare
-      - run: bash ./build-macos-arm64.bash clone
+      - run: bash ./scripts/build-macos-arm64.bash prepare
+      - run: bash ./scripts/build-macos-arm64.bash clone
       - if: ${{ inputs.apply_patches }}
-        run: bash ./patches/apply.bash "${{ inputs.branch }}"
-      - run: bash ./build-macos-arm64.bash build
-      - run: bash ./build-macos-arm64.bash copy
+        run: bash ./scripts/patches-apply.bash "${{ inputs.branch }}"
+      - run: bash ./scripts/build-macos-arm64.bash build
+      - run: bash ./scripts/build-macos-arm64.bash copy
       - uses: actions/upload-artifact@v4
         with:
           name: libnode-macos-arm64
@@ -183,12 +183,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - run: . .\build-windows-amd64.ps1 prepare
-      - run: . .\build-windows-amd64.ps1 clone
+      - run: . .\scripts\build-windows-amd64.ps1 prepare
+      - run: . .\scripts\build-windows-amd64.ps1 clone
       - if: ${{ inputs.apply_patches }}
-        run: . .\patches\apply.ps1 "${{ inputs.branch }}"
-      - run: . .\build-windows-amd64.ps1 build
-      - run: . .\build-windows-amd64.ps1 copy-release
+        run: . .\scripts\patches-apply.ps1 "${{ inputs.branch }}"
+      - run: . .\scripts\build-windows-amd64.ps1 build
+      - run: . .\scripts\build-windows-amd64.ps1 copy-release
       - uses: actions/upload-artifact@v4
         with:
           name: libnode-windows-amd64
