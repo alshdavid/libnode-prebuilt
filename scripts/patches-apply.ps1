@@ -22,13 +22,13 @@ if (Test-Path "$targetDir") {
 Set-Location -Path "$root\node"
 
 # Apply patches from $SCRIPT_DIR\all
-Get-ChildItem -Path "$PSScriptRoot\all" -Filter *.patch | ForEach-Object {
+Get-ChildItem -Path "$root\patches\all" -Filter *.patch | ForEach-Object {
   Write-Host "Applying $($_.FullName)"
   git apply $_.FullName
 }
 
 # Apply patches from the directory passed as argument ($args[0])
-$targetDir = Join-Path $PSScriptRoot $args[0]
+$targetDir = Join-Path $root "patches" $args[0]
 if (Test-Path "$targetDir") {
   Get-ChildItem -Path $targetDir -Filter *.patch | ForEach-Object {
     if (-Not (Test-Path $_.FullName)) {
