@@ -15,7 +15,7 @@ function prepare() {
   sudo rm -f /usr/local/bin/python3 || true
   sudo rm -f /usr/local/bin/python3-config || true
 
-  brew install git node ninja nasm ccache
+  brew install git ninja nasm ccache
 }
 
 function clone() {

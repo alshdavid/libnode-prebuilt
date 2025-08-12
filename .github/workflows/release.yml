@@ -41,7 +41,7 @@ on:
         type: boolean
 
       build_linux_arm64:
-        description: 'Build MacOS ARM64'
+        description: 'Build Linux ARM64'
         default: true
         type: boolean
 
